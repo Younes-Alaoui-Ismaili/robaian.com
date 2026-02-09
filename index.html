@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions Robaian — Intelligence artificielle souveraine pour l'éducation québécoise</title>
+    <meta name="description" content="ALYA : assistant virtuel IA pour le registrariat des cégeps du Québec. Conforme Loi 25, réponses vérifiées, hébergé au Canada. Pilote gratuit 30 jours.">
+    <meta property="og:title" content="Solutions Robaian — ALYA, l'assistante IA du registrariat">
+    <meta property="og:description" content="Vos étudiants méritent des réponses, même à minuit. ALYA répond aux questions les plus fréquentes du registrariat, 24/7, en français québécois.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.robaian.com">
+    <meta property="og:image" content="https://www.robaian.com/og-image.png">
+    <link rel="canonical" href="https://www.robaian.com">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --ink: #0a0a0f;
+            --paper: #f5f2ed;
+            --cream: #ede8df;
+            --slate: #3a3a4a;
+            --muted: #7a7a8a;
+            --accent: #1a5ce6;
+            --accent-light: #e8effd;
+            --accent-glow: #4a8aff;
+            --gold: #c8a44e;
+            --gold-light: #f5efd8;
+            --coral: #e85d4a;
+            --teal: #1a9e8f;
+            --violet: #6c4ee6;
+            --rose: #d64a7b;
+            --emerald: #2a8c5a;
+            --amber: #d4872a;
+            --sky: #2a7ac8;
+
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 2rem;
+            --space-lg: 4rem;
+            --space-xl: 6rem;
+            --space-2xl: 10rem;
+
+            --max-width: 1200px;
+            --radius: 12px;
+            --radius-lg: 20px;
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--ink);
+            background: var(--paper);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: white;
+        }
+
+        img { max-width: 100%; display: block; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ===== UTILITY ===== */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: var(--muted);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.15;
+            font-weight: 400;
+            margin-bottom: var(--space-md);
+        }
+
+        .section-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        /* ===== GRAIN OVERLAY ===== */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ============================================
+           NAVIGATION
+        ============================================ */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: var(--space-sm) var(--space-md);
+            transition: all 0.4s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(245, 242, 237, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(10, 10, 15, 0.06);
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            color: var(--slate);
+            transition: color 0.3s;
+            font-weight: 400;
+        }
+
+        .nav-links a:hover { color: var(--accent); }
+
+        .nav-cta {
+            font-size: 0.8rem !important;
+            font-weight: 500 !important;
+            color: white !important;
+            background: var(--ink);
+            padding: 0.6rem 1.4rem;
+            border-radius: 100px;
+            transition: background 0.3s, transform 0.2s !important;
+        }
+
+        .nav-cta:hover {
+            background: var(--accent) !important;
+            transform: translateY(-1px);
+        }
+
+        .nav-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-mobile-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--ink);
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        /* ============================================
+           HERO
+        ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: var(--space-2xl) 0 var(--space-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(26, 92, 230, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(200, 164, 78, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            line-height: 1.02;
+            font-weight: 400;
+            margin-bottom: var(--space-md);
+            max-width: 900px;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--accent);
+            display: inline-block;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--slate);
+            max-width: 560px;
+            line-height: 1.7;
+            margin-bottom: var(--space-lg);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--ink);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: var(--font-body);
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(26, 92, 230, 0.2);
+        }
+
+        .btn-primary svg {
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(4px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--slate);
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 400;
+            border-radius: 100px;
+            border: 1px solid rgba(10, 10, 15, 0.12);
+            transition: border-color 0.3s, color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            border-top: 1px solid rgba(10, 10, 15, 0.08);
+        }
+
+        .hero-stat-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 0.4rem;
+        }
+
+        /* ============================================
+           PROBLEM — TRIPLE CRISIS
+        ============================================ */
+        .problem {
+            padding: var(--space-xl) 0;
+            background: var(--ink);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .problem::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(26, 92, 230, 0.05) 0%, transparent 50%, rgba(200, 164, 78, 0.03) 100%);
+            pointer-events: none;
+        }
+
+        .problem .section-label { color: var(--gold); }
+        .problem .section-label::before { background: var(--gold); }
+        .problem .section-title { color: white; }
+        .problem .section-title em { color: var(--gold); }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .problem-card {
+            padding: var(--space-md);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            transition: border-color 0.4s, transform 0.3s;
+            position: relative;
+        }
+
+        .problem-card:hover {
+            border-color: rgba(200, 164, 78, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .problem-card-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .problem-card-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-card-title {
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .problem-card-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           SOLUTION — ALYA
+        ============================================ */
+        .solution {
+            padding: var(--space-xl) 0;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            align-items: center;
+            margin-top: var(--space-lg);
+        }
+
+        .solution-visual {
+            background: var(--ink);
+            border-radius: var(--radius-lg);
+            position: relative;
+            overflow: hidden;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Browser chrome */
+        .browser-chrome {
+            background: #1e1e2a;
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .browser-dots {
+            display: flex; gap: 5px;
+        }
+        .browser-dots span {
+            width: 10px; height: 10px; border-radius: 50%;
+        }
+        .browser-dots span:nth-child(1) { background: #ff5f57; }
+        .browser-dots span:nth-child(2) { background: #febc2e; }
+        .browser-dots span:nth-child(3) { background: #28c840; }
+        .browser-url {
+            flex: 1;
+            background: rgba(255,255,255,0.07);
+            border-radius: 6px;
+            padding: 0.3rem 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .browser-url .lock-icon { color: #28c840; font-size: 0.6rem; }
+
+        /* Fake cégep site */
+        .fake-site {
+            flex: 1;
+            background: #f8f7f4;
+            position: relative;
+            overflow: hidden;
+        }
+        .fake-site-nav {
+            background: #1a3a6e;
+            padding: 0.5rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .fake-site-logo {
+            font-family: var(--font-display);
+            color: white;
+            font-size: 0.85rem;
+        }
+        .fake-site-links {
+            display: flex; gap: 0.8rem;
+        }
+        .fake-site-links span {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.03em;
+        }
+        .fake-site-hero {
+            background: linear-gradient(135deg, #1a3a6e 0%, #2a5a9e 100%);
+            padding: 1.5rem 1.2rem 1.2rem;
+            color: white;
+        }
+        .fake-site-hero h3 {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+        .fake-site-hero p {
+            font-size: 0.55rem;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+        .fake-site-content {
+            padding: 1rem 1.2rem;
+            display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .fake-content-bar {
+            height: 8px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 4px;
+        }
+        .fake-content-bar:nth-child(1) { width: 85%; }
+        .fake-content-bar:nth-child(2) { width: 70%; }
+        .fake-content-bar:nth-child(3) { width: 90%; }
+        .fake-content-bar:nth-child(4) { width: 60%; }
+        .fake-content-bar:nth-child(5) { width: 75%; }
+
+        /* ALYA widget overlay */
+        .alya-widget {
+            position: absolute;
+            bottom: 0.8rem;
+            right: 0.8rem;
+            width: 280px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            animation: widgetSlideUp 0.8s ease 0.5s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes widgetSlideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alya-widget-header {
+            background: linear-gradient(135deg, var(--accent) 0%, #2a6af0 100%);
+            padding: 0.7rem 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .alya-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a8aff 0%, #1a5ce6 50%, #6c4ee6 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(26,92,230,0.3);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .alya-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 8px; height: 8px;
+            background: #28c840;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+        }
+        .alya-widget-header-text {
+            color: white;
+        }
+        .alya-widget-header-text .name {
+            font-size: 0.78rem; font-weight: 600;
+        }
+        .alya-widget-header-text .status {
+            font-size: 0.55rem; opacity: 0.8;
+        }
+        .alya-widget-body {
+            padding: 0.7rem;
+            max-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .widget-msg {
+            padding: 0.55rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            line-height: 1.45;
+            max-width: 88%;
+            animation: chatFadeIn 0.6s ease forwards;
+            opacity: 0;
+        }
+        .widget-msg.from-student {
+            background: #f0f0f2;
+            color: var(--ink);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        .widget-msg.from-alya {
+            background: var(--accent);
+            color: white;
+            border-bottom-left-radius: 4px;
+            display: flex;
+            gap: 0.45rem;
+            align-items: flex-start;
+            max-width: 92%;
+        }
+        .widget-msg.from-alya .mini-avatar {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a8aff, #6c4ee6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.45rem; color: white; font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .widget-msg.from-alya .msg-text { flex: 1; }
+        .widget-msg .source-link {
+            display: block;
+            font-size: 0.55rem;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+        .widget-msg:nth-child(1) { animation-delay: 0.8s; }
+        .widget-msg:nth-child(2) { animation-delay: 1.4s; }
+        .widget-msg:nth-child(3) { animation-delay: 2.0s; }
+        .widget-msg:nth-child(4) { animation-delay: 2.6s; }
+        .alya-widget-input {
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding: 0.5rem 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .alya-widget-input span {
+            flex: 1;
+            font-size: 0.65rem;
+            color: #999;
+        }
+        .alya-widget-input .send-btn {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem;
+            color: white;
+        }
+
+        /* Floating bubble (when widget is closed) */
+        .alya-fab {
+            position: absolute;
+            bottom: 0.8rem;
+            right: 0.8rem;
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, #6c4ee6 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display);
+            font-size: 1.1rem; color: white; font-weight: 600;
+            box-shadow: 0 4px 20px rgba(26,92,230,0.35);
+            cursor: pointer;
+            display: none; /* hidden when widget is open */
+        }
+
+        /* Annotation arrow */
+        .mockup-annotation {
+            position: absolute;
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            color: var(--accent);
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        @keyframes chatFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.35);
+            margin-bottom: 0.3rem;
+        }
+
+        .solution-features {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            background: var(--accent-light);
+        }
+
+        .feature-title {
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .feature-text {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           CONCEPT — UN CERVEAU, PLUSIEURS CORPS
+        ============================================ */
+        .concept {
+            padding: var(--space-xl) 0;
+            background: var(--cream);
+        }
+
+        .concept-header {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto var(--space-xl);
+        }
+
+        .concept-header p {
+            font-size: 1.05rem;
+            color: var(--slate);
+            line-height: 1.7;
+        }
+
+        .concept-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .brain-core {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--violet));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(26, 92, 230, 0.25);
+            flex-shrink: 0;
+        }
+
+        .brain-core::after {
+            content: '';
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1px dashed rgba(26, 92, 230, 0.2);
+            animation: rotateSlow 30s linear infinite;
+        }
+
+        @keyframes rotateSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .brain-core-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .brain-core-text {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .bodies-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--space-sm);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .body-card {
+            text-align: center;
+            padding: var(--space-md) var(--space-sm);
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid rgba(10, 10, 15, 0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .body-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(10, 10, 15, 0.08);
+        }
+
+        .body-card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .body-card-name {
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .body-card-desc {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        /* ============================================
+           PRODUCTS — THE 7 SISTERS
+        ============================================ */
+        .products {
+            padding: var(--space-xl) 0;
+        }
+
+        .products-header {
+            max-width: 680px;
+            margin-bottom: var(--space-xl);
+        }
+
+        .products-header p {
+            font-size: 1.05rem;
+            color: var(--slate);
+            line-height: 1.7;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .product-card {
+            border: 1px solid rgba(10, 10, 15, 0.08);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            background: white;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--card-accent, var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(10, 10, 15, 0.08);
+            border-color: transparent;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+        }
+
+        .product-card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: var(--card-bg, var(--accent-light));
+        }
+
+        .product-phase {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.7rem;
+            border-radius: 100px;
+            border: 1px solid rgba(10, 10, 15, 0.1);
+            color: var(--muted);
+        }
+
+        .product-phase.active {
+            background: var(--accent);
+            color: white;
+            border-color: transparent;
+        }
+
+        .product-card-name {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .product-card-subtitle {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        .product-card-desc {
+            font-size: 0.9rem;
+            color: var(--slate);
+            line-height: 1.6;
+            margin-bottom: var(--space-sm);
+        }
+
+        .product-card-meta {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .product-tag {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            padding: 0.3rem 0.65rem;
+            border-radius: 100px;
+            background: var(--paper);
+            color: var(--slate);
+        }
+
+        /* Card-specific accent colors */
+        .product-card[data-product="alya"] { --card-accent: var(--accent); --card-bg: var(--accent-light); }
+        .product-card[data-product="alya-plus"] { --card-accent: var(--sky); --card-bg: #e6f1fa; }
+        .product-card[data-product="nora"] { --card-accent: var(--violet); --card-bg: #ede6fa; }
+        .product-card[data-product="savoir"] { --card-accent: var(--emerald); --card-bg: #e2f3ea; }
+        .product-card[data-product="mentor"] { --card-accent: var(--amber); --card-bg: #faf0e2; }
+        .product-card[data-product="aura"] { --card-accent: var(--teal); --card-bg: #e0f5f2; }
+        .product-card[data-product="sentinelle"] { --card-accent: var(--rose); --card-bg: #fae6ed; }
+
+        /* Featured ALYA card spans full width */
+        .product-card.featured {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            padding: var(--space-lg);
+            background: linear-gradient(135deg, var(--ink) 0%, #1a1a2e 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .product-card.featured .product-phase.active {
+            background: var(--gold);
+            color: var(--ink);
+        }
+
+        .product-card.featured .product-card-subtitle {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .product-card.featured .product-card-desc {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .product-card.featured .product-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .product-card.featured .product-card-icon {
+            background: rgba(26, 92, 230, 0.2);
+        }
+
+        .featured-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .featured-mockup {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: var(--space-md);
+            width: 100%;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .featured-mockup .line {
+            margin-bottom: 0.5rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .featured-mockup .line-accent {
+            color: var(--accent-glow);
+        }
+
+        .featured-mockup .line-gold {
+            color: var(--gold);
+        }
+
+        /* ============================================
+           ADVANTAGES
+        ============================================ */
+        .advantages {
+            padding: var(--space-xl) 0;
+            background: var(--ink);
+            color: white;
+        }
+
+        .advantages .section-label { color: var(--accent-glow); }
+        .advantages .section-label::before { background: var(--accent-glow); }
+        .advantages .section-title em { color: var(--accent-glow); }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-top: var(--space-lg);
+        }
+
+        .advantage-cell {
+            padding: var(--space-md);
+            background: var(--ink);
+            transition: background 0.3s;
+        }
+
+        .advantage-cell:hover {
+            background: rgba(26, 92, 230, 0.06);
+        }
+
+        .advantage-number {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent-glow);
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .advantage-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .advantage-text {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           HOW IT WORKS
+        ============================================ */
+        .how-it-works {
+            padding: var(--space-xl) 0;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .step-card {
+            text-align: center;
+            padding: var(--space-lg) var(--space-md);
+            position: relative;
+        }
+
+        .step-card::after {
+            content: '→';
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--muted);
+        }
+
+        .step-card:last-child::after { display: none; }
+
+        .step-number {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-sm);
+        }
+
+        .step-title {
+            font-weight: 500;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-text {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .step-time {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--accent);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 0.75rem;
+        }
+
+        /* ============================================
+           FOUNDER
+        ============================================ */
+        .founder {
+            padding: var(--space-xl) 0;
+            background: var(--cream);
+        }
+
+        .founder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: var(--space-xl);
+            align-items: center;
+            margin-top: var(--space-lg);
+        }
+
+        .founder-portrait {
+            aspect-ratio: 4/5;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--ink) 0%, #1a1a3e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .founder-portrait::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 40%, rgba(26, 92, 230, 0.15) 0%, transparent 60%);
+        }
+
+        .founder-initials {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            font-family: var(--font-display);
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+        }
+
+        .founder-name-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .founder-card-name {
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .founder-card-role {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.82rem;
+        }
+
+        .founder-story h3 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .founder-story p {
+            font-size: 0.95rem;
+            color: var(--slate);
+            line-height: 1.75;
+            margin-bottom: var(--space-sm);
+        }
+
+        .credentials-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .credential-item {
+            padding: 1rem;
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid rgba(10, 10, 15, 0.06);
+        }
+
+        .credential-org {
+            font-weight: 500;
+            font-size: 0.88rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .credential-role {
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        /* ============================================
+           CTA FINAL
+        ============================================ */
+        .cta-final {
+            padding: var(--space-2xl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-final::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(26, 92, 230, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta-final .section-label {
+            justify-content: center;
+        }
+
+        .cta-final .section-label::before { display: none; }
+
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            line-height: 1.1;
+            max-width: 700px;
+            margin: 0 auto var(--space-sm);
+        }
+
+        .cta-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .cta-subtitle {
+            font-size: 1.05rem;
+            color: var(--slate);
+            max-width: 500px;
+            margin: 0 auto var(--space-lg);
+            line-height: 1.7;
+        }
+
+        .cta-pitch {
+            max-width: 680px;
+            margin: 0 auto var(--space-lg);
+            padding: var(--space-md);
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid rgba(10, 10, 15, 0.06);
+            font-style: italic;
+            color: var(--slate);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
+        .footer {
+            padding: var(--space-lg) 0 var(--space-md);
+            background: var(--ink);
+            color: white;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .footer-brand p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.45);
+            line-height: 1.65;
+            margin-top: var(--space-sm);
+            max-width: 300px;
+        }
+
+        .footer-col-title {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: var(--space-sm);
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .footer-links a {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: white; }
+
+        .footer-bottom {
+            padding-top: var(--space-md);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-neq {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 1024px) {
+            .advantages-grid { grid-template-columns: repeat(2, 1fr); }
+            .product-card.featured { grid-template-columns: 1fr; }
+            .featured-visual { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --space-lg: 3rem;
+                --space-xl: 4rem;
+                --space-2xl: 6rem;
+            }
+
+            .nav-links { display: none; }
+            .nav-mobile-toggle { display: block; }
+
+            .problem-grid { grid-template-columns: 1fr; }
+            .solution-grid { grid-template-columns: 1fr; }
+            .alya-widget { width: 240px; }
+            .widget-msg { font-size: 0.62rem; }
+            .fake-site-links { display: none; }
+            .fake-site-hero h3 { font-size: 0.8rem; }
+            .bodies-grid { grid-template-columns: repeat(3, 1fr); }
+            .products-grid { grid-template-columns: 1fr; }
+            .advantages-grid { grid-template-columns: 1fr; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .step-card::after { display: none; }
+            .founder-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+
+            .hero-stats { flex-direction: column; gap: var(--space-md); }
+            .hero-actions { flex-direction: column; align-items: flex-start; }
+
+            .credentials-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .bodies-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">ROBAIAN<span>.</span></a>
+            <ul class="nav-links">
+                <li><a href="#solution">ALYA</a></li>
+                <li><a href="#avantages">Avantages</a></li>
+                <li><a href="#mission">Qui sommes-nous</a></li>
+                <li><a href="#contact" class="nav-cta">Réserver une démo</a></li>
+            </ul>
+            <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-eyebrow reveal">Solutions Robaian — Montréal, Québec</div>
+            <h1 class="hero-title reveal reveal-delay-1">
+                Vos étudiants méritent<br>des réponses. <em>Même à minuit.</em>
+            </h1>
+            <p class="hero-subtitle reveal reveal-delay-2">
+                ALYA répond aux questions les plus fréquentes du registrariat — inscription, dates limites, aide financière, Omnivox — en français québécois, 24/7. Conforme Loi&nbsp;25, hébergée au Canada.
+            </p>
+            <div class="hero-actions reveal reveal-delay-3">
+                <a href="#contact" class="btn-primary">
+                    Réserver une démo
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a href="#produits" class="btn-secondary">Découvrir les produits</a>
+            </div>
+            <div class="hero-stats reveal reveal-delay-4">
+                <div>
+                    <div class="hero-stat-value">100%</div>
+                    <div class="hero-stat-label">Des questions courantes couvertes</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">24/7</div>
+                    <div class="hero-stat-label">Disponible soirs et fins de semaine</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">48h</div>
+                    <div class="hero-stat-label">Déploiement — une ligne de code</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">~½</div>
+                    <div class="hero-stat-label">Du coût d'un poste à temps plein</div>
+                </div>
+            </div>
+            <!-- Trust bar -->
+            <div class="reveal reveal-delay-4" style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem 2.5rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid rgba(26,26,26,0.08);">
+                <span style="font-size:0.8rem; color:var(--muted); letter-spacing:0.04em; display:flex; align-items:center; gap:0.4rem;">🔒 Conforme Loi 25</span>
+                <span style="font-size:0.8rem; color:var(--muted); letter-spacing:0.04em; display:flex; align-items:center; gap:0.4rem;">🇨🇦 Hébergé 100% au Canada</span>
+                <span style="font-size:0.8rem; color:var(--muted); letter-spacing:0.04em; display:flex; align-items:center; gap:0.4rem;">🎓 Conçu pour le réseau collégial</span>
+                <span style="font-size:0.8rem; color:var(--muted); letter-spacing:0.04em; display:flex; align-items:center; gap:0.4rem;">🛡️ Informations vérifiées uniquement</span>
+                <span style="font-size:0.8rem; color:var(--muted); letter-spacing:0.04em; display:flex; align-items:center; gap:0.4rem;">⚡ Pilote gratuit 30 jours</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROBLEM ===== -->
+    <section class="problem" id="probleme">
+        <div class="container">
+            <div class="section-label reveal">Le problème</div>
+            <h2 class="section-title reveal reveal-delay-1">
+                Une triple crise dans<br>nos <em>cégeps</em>
+            </h2>
+            <div class="problem-grid">
+                <div class="problem-card reveal reveal-delay-1">
+                    <div class="problem-card-icon">👤</div>
+                    <div class="problem-card-number">10%</div>
+                    <div class="problem-card-title">Postes vacants</div>
+                    <div class="problem-card-text">Le personnel administratif des services aux étudiants est de plus en plus difficile à recruter. Des milliers d'étudiants restent sans réponse.</div>
+                </div>
+                <div class="problem-card reveal reveal-delay-2">
+                    <div class="problem-card-icon">📉</div>
+                    <div class="problem-card-number">151M$</div>
+                    <div class="problem-card-title">Compressions budgétaires</div>
+                    <div class="problem-card-text">Le réseau collégial fait face à des coupes de 151 M$ pour 2025-2026, forçant des choix au détriment des services aux étudiants.</div>
+                </div>
+                <div class="problem-card reveal reveal-delay-3">
+                    <div class="problem-card-icon">🕐</div>
+                    <div class="problem-card-number">0</div>
+                    <div class="problem-card-title">Réponses après 17h</div>
+                    <div class="problem-card-text">Étudiants adultes, parents, travailleurs — la clientèle croissante de la formation continue n'obtient aucune réponse le soir et la fin de semaine.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SOLUTION ===== -->
+    <section class="solution" id="solution">
+        <div class="container">
+            <div class="section-label reveal">La solution</div>
+            <h2 class="section-title reveal reveal-delay-1">
+                Rencontrez <em>ALYA</em>, votre agente<br>virtuelle du registrariat
+            </h2>
+            <div class="solution-grid">
+                <div class="solution-visual reveal">
+                    <!-- Browser chrome -->
+                    <div class="browser-chrome">
+                        <div class="browser-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="browser-url">
+                            <span class="lock-icon">🔒</span> cegep-exemple.qc.ca/services-etudiants
+                        </div>
+                    </div>
+
+                    <!-- Fake cégep website -->
+                    <div class="fake-site">
+                        <div class="fake-site-nav">
+                            <div class="fake-site-logo">Cégep du Québec</div>
+                            <div class="fake-site-links">
+                                <span>Programmes</span>
+                                <span>Admission</span>
+                                <span>Vie étudiante</span>
+                                <span>Contact</span>
+                            </div>
+                        </div>
+                        <div class="fake-site-hero">
+                            <h3>Services aux étudiants</h3>
+                            <p>Registrariat · Aide financière · Orientation · Vie étudiante</p>
+                        </div>
+                        <div class="fake-site-content">
+                            <div class="fake-content-bar"></div>
+                            <div class="fake-content-bar"></div>
+                            <div class="fake-content-bar"></div>
+                            <div class="fake-content-bar"></div>
+                            <div class="fake-content-bar"></div>
+                        </div>
+
+                        <!-- ALYA Widget overlay on the site -->
+                        <div class="alya-widget">
+                            <div class="alya-widget-header">
+                                <div class="alya-avatar">A</div>
+                                <div class="alya-widget-header-text">
+                                    <div class="name">ALYA</div>
+                                    <div class="status">Registrariat · En ligne 24/7</div>
+                                </div>
+                            </div>
+                            <div class="alya-widget-body">
+                                <div class="widget-msg from-student">C'est quoi la date limite pour l'automne?</div>
+                                <div class="widget-msg from-alya">
+                                    <div class="mini-avatar">A</div>
+                                    <div class="msg-text">
+                                        Le 1er tour d'admission est le <strong>1er mars</strong> pour la session d'automne. Tu déposes ta demande sur le site du SRAM. 📋
+                                        <span class="source-link">Source : sram.qc.ca</span>
+                                    </div>
+                                </div>
+                                <div class="widget-msg from-student">Et si je suis refusé?</div>
+                                <div class="widget-msg from-alya">
+                                    <div class="mini-avatar">A</div>
+                                    <div class="msg-text">
+                                        Pas de panique! Tu peux participer au 2e tour avec les places restantes, sans frais. 💪
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alya-widget-input">
+                                <span>Pose ta question...</span>
+                                <div class="send-btn">➤</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Annotation -->
+                    <div style="background: rgba(26,92,230,0.08); padding: 0.5rem 1rem; text-align:center;">
+                        <span style="font-family: var(--font-mono); font-size: 0.6rem; color: var(--accent); letter-spacing: 0.05em;">
+                            ↑ Voici à quoi ALYA ressemble sur le site de votre cégep — 22h47, un mardi soir
+                        </span>
+                    </div>
+                </div>
+                <div class="solution-features reveal reveal-delay-2">
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div>
+                            <div class="feature-title">Informations vérifiées</div>
+                            <div class="feature-text">ALYA répond exclusivement à partir des documents officiels de votre cégep. Chaque réponse est accompagnée de sa source pour que l'étudiant puisse vérifier.</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div>
+                            <div class="feature-title">Conforme à la Loi 25</div>
+                            <div class="feature-text">100% des données hébergées au Canada. Aucune connexion vers des serveurs étrangers. Les informations de vos étudiants ne quittent jamais le Québec.</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🗣️</div>
+                        <div>
+                            <div class="feature-title">Français québécois natif</div>
+                            <div class="feature-text">Pas une traduction. ALYA comprend le vocabulaire des cégeps : DEC, AEC, Omnivox, cote R, SRAM, commandite.</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div>
+                            <div class="feature-title">Déploiement en 48 heures</div>
+                            <div class="feature-text">Une ligne de code sur votre site web. Aucune installation. Aucune intégration lourde. ALYA est opérationnelle en deux jours.</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div>
+                            <div class="feature-title">Tableau de bord inclus</div>
+                            <div class="feature-text">Métriques en temps réel : questions/jour, taux de résolution, heures de pointe, top 10 des questions. Vos données deviennent votre argument.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== PRODUCTS ===== -->
+    <section class="products" id="produits">
+        <div class="container">
+            <div class="products-header">
+                <div class="section-label reveal">Le produit</div>
+                <h2 class="section-title reveal reveal-delay-1">ALYA — votre agente<br>du <em>registrariat</em></h2>
+                <p class="reveal reveal-delay-2">Un chatbot IA intégré au site web de votre cégep qui répond aux questions les plus fréquentes du registrariat. En français québécois. 24/7. Avec les données qui restent au Canada.</p>
+            </div>
+
+            <div class="products-grid">
+
+                <!-- ALYA — Featured -->
+                <div class="product-card featured reveal" data-product="alya">
+                    <div>
+                        <div class="product-card-header">
+                            <div class="product-card-icon">🎓</div>
+                            <div class="product-phase active">Pilote disponible — Places limitées</div>
+                        </div>
+                        <div class="product-card-name">ALYA</div>
+                        <div class="product-card-subtitle">Agent virtuel du registrariat</div>
+                        <div class="product-card-desc">
+                            ALYA répond aux questions des étudiants sur l'inscription, les dates limites, les changements de programme, l'accès Omnivox, les frais, l'aide financière et les procédures courantes. Chaque réponse inclut la source officielle. Pas de devinettes.
+                        </div>
+                        <div class="product-card-meta">
+                            <span class="product-tag">Registrariat</span>
+                            <span class="product-tag">2 500$/mois</span>
+                            <span class="product-tag">Déploiement 48h</span>
+                        </div>
+                    </div>
+                    <div class="featured-visual">
+                        <div class="featured-mockup" style="font-size:0.82rem; line-height:1.8;">
+                            <div class="line"><span class="line-gold">Étudiant :</span> C'est quoi la date limite d'abandon?</div>
+                            <div class="line"><span class="line-accent">ALYA :</span> La date limite d'abandon avec mention</div>
+                            <div class="line">  AE est le ~30 octobre à l'automne.</div>
+                            <div class="line">  Après cette date, un échec sera inscrit.</div>
+                            <div class="line" style="opacity:0.5;">  📋 Source : calendrier scolaire 2025-2026</div>
+                            <div class="line" style="margin-top:1rem;"><span class="line-gold">Étudiant :</span> Et si j'ai des prêts et bourses?</div>
+                            <div class="line"><span class="line-accent">ALYA :</span> Contacte le service d'aide financière</div>
+                            <div class="line">  avant de prendre ta décision — un abandon</div>
+                            <div class="line">  peut affecter ton admissibilité.</div>
+                            <div class="line" style="opacity:0.5;">  📞 Aide financière : poste 2345</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ecosystem teaser - wide card -->
+                <div class="product-card reveal" style="grid-column: 1 / -1; background: linear-gradient(135deg, var(--cream) 0%, var(--paper) 100%); border: 1px solid rgba(10,10,15,0.08); padding: 2.5rem;">
+                    <div style="text-align:center; margin-bottom:2rem;">
+                        <div style="font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--muted); margin-bottom:0.5rem;">L'écosystème Robaian</div>
+                        <div style="font-family:var(--font-display); font-size:1.4rem;">ALYA est le point de départ. <em style="color:var(--accent);">La suite arrive.</em></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:1.5rem; max-width:700px; margin:0 auto;">
+                        <!-- ALYA+ -->
+                        <div style="text-align:center; opacity:0.7; transition:opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+                            <div style="width:52px; height:52px; border-radius:14px; background:rgba(26,92,230,0.08); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin:0 auto 0.6rem;">➕</div>
+                            <div style="font-weight:500; font-size:0.82rem; margin-bottom:0.15rem;">ALYA+</div>
+                            <div style="font-size:0.68rem; color:var(--muted);">Aide financière</div>
+                        </div>
+                        <!-- NORA -->
+                        <div style="text-align:center; opacity:0.7; transition:opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+                            <div style="width:52px; height:52px; border-radius:14px; background:rgba(26,158,143,0.08); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin:0 auto 0.6rem;">🧭</div>
+                            <div style="font-weight:500; font-size:0.82rem; margin-bottom:0.15rem;">NORA</div>
+                            <div style="font-size:0.68rem; color:var(--muted);">Orientation</div>
+                        </div>
+                        <!-- SAVOIR -->
+                        <div style="text-align:center; opacity:0.7; transition:opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+                            <div style="width:52px; height:52px; border-radius:14px; background:rgba(108,78,230,0.08); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin:0 auto 0.6rem;">📚</div>
+                            <div style="font-weight:500; font-size:0.82rem; margin-bottom:0.15rem;">SAVOIR</div>
+                            <div style="font-size:0.68rem; color:var(--muted);">Bibliothèque</div>
+                        </div>
+                        <!-- MENTOR -->
+                        <div style="text-align:center; opacity:0.7; transition:opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+                            <div style="width:52px; height:52px; border-radius:14px; background:rgba(214,74,123,0.08); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin:0 auto 0.6rem;">📐</div>
+                            <div style="font-weight:500; font-size:0.82rem; margin-bottom:0.15rem;">MENTOR</div>
+                            <div style="font-size:0.68rem; color:var(--muted);">Tutorat</div>
+                        </div>
+                        <!-- AURA -->
+                        <div style="text-align:center; opacity:0.7; transition:opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+                            <div style="width:52px; height:52px; border-radius:14px; background:rgba(200,164,78,0.08); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin:0 auto 0.6rem;">🏢</div>
+                            <div style="font-weight:500; font-size:0.82rem; margin-bottom:0.15rem;">AURA</div>
+                            <div style="font-size:0.68rem; color:var(--muted);">Accueil</div>
+                        </div>
+                    </div>
+                    <div style="text-align:center; margin-top:1.5rem; font-size:0.8rem; color:var(--muted);">
+                        Même technologie. Même conformité. Déploiement progressif selon vos besoins.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ADVANTAGES ===== -->
+    <section class="advantages" id="avantages">
+        <div class="container">
+            <div class="section-label reveal">Pourquoi Robaian</div>
+            <h2 class="section-title reveal reveal-delay-1">
+                Ce qui nous<br><em>distingue</em>
+            </h2>
+            <div class="advantages-grid reveal reveal-delay-2" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="advantage-cell">
+                    <div class="advantage-number">01</div>
+                    <div class="advantage-title">Vos données restent ici</div>
+                    <div class="advantage-text">100% hébergé au Canada. Conforme Loi 25 dès la conception. Aucune donnée étudiante ne transite par des serveurs américains — contrairement à ChatGPT, Dialogflow ou AWS.</div>
+                </div>
+                <div class="advantage-cell">
+                    <div class="advantage-number">02</div>
+                    <div class="advantage-title">Conçu pour les cégeps</div>
+                    <div class="advantage-text">ALYA comprend Omnivox, le SRAM, la cote R, l'AFE, les commandites, les DEC et les AEC. Pas un chatbot générique qu'on a adapté — un outil pensé pour votre réalité.</div>
+                </div>
+                <div class="advantage-cell">
+                    <div class="advantage-number">03</div>
+                    <div class="advantage-title">Pas de devinettes</div>
+                    <div class="advantage-text">ALYA répond uniquement à partir des documents officiels de votre cégep. Chaque réponse inclut un lien vers la source. Zéro invention, zéro risque.</div>
+                </div>
+                <div class="advantage-cell">
+                    <div class="advantage-number">04</div>
+                    <div class="advantage-title">Rien à installer</div>
+                    <div class="advantage-text">Une ligne de code sur votre site web. Aucune intégration avec vos systèmes. Votre équipe technique n'a rien à faire. En ligne en 48 heures.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-label reveal" style="justify-content:center;">Comment ça marche</div>
+            <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">
+                Trois étapes.<br><em>Zéro</em> friction.
+            </h2>
+            <div class="steps-grid">
+                <div class="step-card reveal reveal-delay-1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Démo personnalisée</div>
+                    <div class="step-text">On vous présente ALYA en action avec les vraies questions de vos étudiants. 30 minutes, en ligne, sans engagement.</div>
+                    <div class="step-time">30 minutes</div>
+                </div>
+                <div class="step-card reveal reveal-delay-2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Pilote gratuit</div>
+                    <div class="step-text">ALYA est intégrée à votre site pendant 30 jours. On mesure ensemble : questions traitées, taux de résolution, heures d'utilisation.</div>
+                    <div class="step-time">30 jours</div>
+                </div>
+                <div class="step-card reveal reveal-delay-3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">On continue!</div>
+                    <div class="step-text">Satisfait des résultats? ALYA est déjà en ligne — aucune installation requise. On passe en mode permanent.</div>
+                    <div class="step-time">48 heures</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COST COMPARISON ===== -->
+    <section style="padding:4rem 0; background:var(--paper);">
+        <div class="container">
+            <div class="section-label reveal" style="justify-content:center;">L'investissement</div>
+            <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">
+                Une fraction du coût<br>d'un poste <em>à temps plein</em>
+            </h2>
+            <div class="reveal reveal-delay-2" style="max-width:700px; margin:2.5rem auto 0; display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                <!-- Current cost -->
+                <div style="background:var(--cream); border:1px solid rgba(26,26,26,0.08); border-radius:12px; padding:2rem; text-align:center;">
+                    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-light); margin-bottom:1rem;">Poste d'accueil</div>
+                    <div style="font-family:var(--font-display); font-size:2.2rem; color:var(--ink);">50 000$+</div>
+                    <div style="font-size:0.85rem; color:var(--ink-light); margin-top:0.3rem;">/an <span style="font-size:0.75rem;">(salaire + avantages)</span></div>
+                    <div style="margin-top:1.2rem; font-size:0.8rem; color:var(--ink-light); line-height:1.6;">Lun-ven, 8h-17h<br>Difficile à recruter<br>Congés, absences, roulement</div>
+                </div>
+                <!-- ALYA -->
+                <div style="background:var(--ink); border:1px solid var(--ink); border-radius:12px; padding:2rem; text-align:center; color:var(--paper); position:relative; overflow:hidden;">
+                    <div style="position:absolute; top:0; right:0; background:var(--accent); color:var(--ink); font-size:0.65rem; font-weight:600; padding:0.3rem 0.8rem; border-radius:0 12px 0 8px; letter-spacing:0.05em; text-transform:uppercase;">Recommandé</div>
+                    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.6; margin-bottom:1rem;">ALYA Essentiel</div>
+                    <div style="font-family:var(--font-display); font-size:2.2rem;">30 000$</div>
+                    <div style="font-size:0.85rem; opacity:0.6; margin-top:0.3rem;">/an <span style="font-size:0.75rem;">(2 500$/mois)</span></div>
+                    <div style="margin-top:1.2rem; font-size:0.8rem; opacity:0.7; line-height:1.6;">24/7/365, sans interruption<br>Déploiement en 48 heures<br>Aucun recrutement nécessaire</div>
+                </div>
+            </div>
+            <p class="reveal reveal-delay-3" style="text-align:center; max-width:550px; margin:1.5rem auto 0; font-size:0.85rem; color:var(--ink-light);">
+                ALYA ne remplace pas vos employés — elle comble le vide là où personne ne peut répondre. Le soir, la fin de semaine, et pendant les périodes de pointe.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== MISSION ===== -->
+    <section class="founder" id="mission">
+        <div class="container">
+            <div class="section-label reveal">Qui sommes-nous</div>
+            <h2 class="section-title reveal reveal-delay-1">
+                Une équipe <em>québécoise</em><br>qui connaît le réseau
+            </h2>
+            <div class="founder-grid">
+                <div class="founder-portrait reveal" style="justify-content: center; align-items: center; gap: 1.5rem;">
+                    <div style="text-align:center; padding: 2rem 1.5rem;">
+                        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--ink); margin-bottom: 0.5rem;">Solutions Robaian</div>
+                        <div style="font-size: 0.85rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 2rem;">Montréal, Québec</div>
+                        <div style="display:grid; gap: 1rem; text-align:left;">
+                            <div style="display:flex; gap:0.75rem; align-items:center;">
+                                <span style="font-size:1.2rem;">🏢</span>
+                                <span style="font-size:0.9rem; color:var(--muted);">Entreprise québécoise immatriculée</span>
+                            </div>
+                            <div style="display:flex; gap:0.75rem; align-items:center;">
+                                <span style="font-size:1.2rem;">🔬</span>
+                                <span style="font-size:0.9rem; color:var(--muted);">Expertise en systèmes critiques et IA</span>
+                            </div>
+                            <div style="display:flex; gap:0.75rem; align-items:center;">
+                                <span style="font-size:1.2rem;">🎓</span>
+                                <span style="font-size:0.9rem; color:var(--muted);">Racines académiques québécoises</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="founder-story reveal reveal-delay-2">
+                    <h3>On résout un problème<br>qu'on connaît bien.</h3>
+                    <p>
+                        Solutions Robaian est née d'un constat simple : les cégeps manquent de personnel, les budgets diminuent, et les étudiants ont besoin de réponses le soir et la fin de semaine. Les solutions américaines ne sont pas conformes à la Loi 25 et ne comprennent pas le vocabulaire du réseau collégial.
+                    </p>
+                    <p>
+                        Nous développons ALYA, un assistant virtuel conçu exclusivement pour le registrariat des cégeps. Pas un chatbot générique. Un outil pensé pour les réalités de vos équipes — hébergé au Canada, en français québécois, avec des données qui ne quittent jamais le pays.
+                    </p>
+                    <p>
+                        Notre approche est simple : on commence petit, on prouve que ça marche, et on grandit avec vous.
+                    </p>
+                    <div class="credentials-grid">
+                        <div class="credential-item">
+                            <div class="credential-org">🛡️ Fiabilité</div>
+                            <div class="credential-role">Réponses basées uniquement sur vos documents officiels</div>
+                        </div>
+                        <div class="credential-item">
+                            <div class="credential-org">🔒 Conformité</div>
+                            <div class="credential-role">Conforme à la Loi 25 — données 100% au Canada</div>
+                        </div>
+                        <div class="credential-item">
+                            <div class="credential-org">🤝 Proximité</div>
+                            <div class="credential-role">Équipe locale, même fuseau horaire, même langue</div>
+                        </div>
+                        <div class="credential-item">
+                            <div class="credential-org">🎯 Focus</div>
+                            <div class="credential-role">Un seul produit, bien fait, pour le registrariat</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA FINAL ===== -->
+    <section class="cta-final" id="contact">
+        <div class="container">
+            <div class="section-label reveal">Prochaine étape</div>
+            <h2 class="cta-title reveal reveal-delay-1">
+                Voyez ALYA en action<br>dans <em>votre cégep</em>
+            </h2>
+            <p class="cta-subtitle reveal reveal-delay-2">
+                30 minutes. Aucun engagement. On vous montre ALYA qui répond aux vraies questions de vos étudiants — avec vos données.
+            </p>
+            <div class="cta-pitch reveal reveal-delay-3">
+                Pilote gratuit de 30 jours disponible. Places limitées pour l'automne 2026.
+            </div>
+            <div class="reveal reveal-delay-4">
+                <a href="mailto:contact@robaian.com?subject=Demande de démo ALYA" class="btn-primary" style="font-size:1rem; padding:1.15rem 2.5rem;">
+                    Réserver une démo gratuite
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="nav-logo" style="font-size:0.9rem;">ROBAIAN<span style="color:var(--accent-glow)">.</span></div>
+                    <p>Assistant virtuel IA pour le registrariat des cégeps du Québec. Conforme Loi 25. Hébergé au Canada.</p>
+                </div>
+                <div>
+                    <div class="footer-col-title">Navigation</div>
+                    <ul class="footer-links">
+                        <li><a href="#solution">ALYA</a></li>
+                        <li><a href="#avantages">Avantages</a></li>
+                        <li><a href="#mission">Qui sommes-nous</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Ressources</div>
+                    <ul class="footer-links">
+                        <li><a href="#contact">Demander une démo</a></li>
+                        <li><a href="#produits">Le produit</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Contact</div>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@robaian.com">contact@robaian.com</a></li>
+                        <li><a href="tel:4389259945">438-925-9945</a></li>
+                        <li><a href="#">Montréal, QC</a></li>
+                        <li><a href="https://linkedin.com/company/robaian" target="_blank" rel="noopener">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Solutions Robaian. Tous droits réservés.</span>
+                <span style="font-family:var(--font-mono); font-size:0.7rem;">Montréal, Québec</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // Scroll reveal
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
